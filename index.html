@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o </title>
+    <title>Mp3o X </title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -185,12 +185,11 @@
     </div>
 
     <script>
-        // Keep only this version of handleLogin
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-    
+
             // Simple static authentication
             if (username === "admin" && password === "password123") {
                 document.getElementById('login-section').classList.add('hidden');
@@ -202,13 +201,11 @@
             return false;
         }
 
-        // Keep only one DOMContentLoaded listener
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
         });
 
-        // Keep only this version of switchFolder
         function switchFolder(folderName) {
             document.querySelectorAll('.folder-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -233,6 +230,17 @@
                 li.onclick = () => playAudio(`audio/${folderName}/${song}`);
                 playlist.appendChild(li);
             });
+        }
+
+        // Add missing playAudio function
+        function playAudio(audioPath) {
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.src = audioPath;
+            audioPlayer.play();
+            
+            // Update track info
+            const trackName = audioPath.split('/').pop();
+            document.getElementById('track-info').innerHTML = `Now Playing: ${trackName}`;
         }
     </script>
 </body>
