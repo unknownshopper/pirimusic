@@ -234,6 +234,7 @@
         });
 
         function switchFolder(folderName) {
+            console.log('Switching to folder:', folderName);
             document.querySelectorAll('.folder-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.textContent.toLowerCase() === folderName) {
@@ -283,12 +284,12 @@
             };
 
             const songs = playlists[folderName] || [];
+            console.log('Songs in playlist:', songs);
             songs.forEach((song, index) => {
                 const li = document.createElement('li');
                 li.textContent = `${index + 1}. ${song}`;
-                li.onclick = () => playAudio(`audio/${folderName}/${song}`);
-                // Si esta canción está reproduciéndose, agregar clase active
-                if (audioPlayer.src.endsWith(song)) {
+                li.onclick = () => playAudio(`/audio/${folderName}/${song}`);
+                if (audioPlayer.src.includes(song)) {
                     li.classList.add('active');
                 }
                 playlist.appendChild(li);
@@ -298,7 +299,12 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Actualizar UI primero
+            // Fix the path handling
+            const fullPath = audioPath.startsWith('/') ? audioPath.substring(1) : audioPath;
+            
+            // Remove the duplicate fullPath declaration
+            audioPlayer.src = fullPath;
+            
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
             });
@@ -312,11 +318,12 @@
                 currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             
-            // Intentar reproducir
-            const fullPath = './' + audioPath;
-            audioPlayer.src = fullPath;
-            
-            document.getElementById('track-info').innerHTML = `Cargando: ${currentSong}`;
+            audioPlayer.onerror = function(e) {
+                console.error('Error loading audio:', audioPath);
+                console.error('Full path tried:', fullPath);
+                document.getElementById('track-info').innerHTML = 
+                    `❌ Error loading: ${currentSong}`;
+            };
             
             audioPlayer.load(); // Forzar recarga del audio
             
