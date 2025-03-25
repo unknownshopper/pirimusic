@@ -190,9 +190,9 @@
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
-            // For demo purposes
-            if (username === "demo" && password === "demo123") {
+    
+            // Simple authentication for GitHub Pages
+            if (username === "admin" && password === "password123") {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('player-section').classList.remove('hidden');
                 switchFolder('deep');
@@ -201,13 +201,13 @@
             }
             return false;
         }
-
-        // Simplify the DOMContentLoaded handler
+    
+        // Simplified DOMContentLoaded listener
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
         });
-
+    
         function switchFolder(folderName) {
             // Update active button state
             document.querySelectorAll('.folder-btn').forEach(btn => {
@@ -216,17 +216,22 @@
                     btn.classList.add('active');
                 }
             });
-
-            // Update to use static file structure
+    
             const playlist = document.getElementById('playlist');
-            playlist.innerHTML = ''; // Clear current playlist
-            
-            // Add your static playlist items here
-            const songs = getSongsForFolder(folderName);
+            playlist.innerHTML = '';
+    
+            // Static playlist configuration
+            const playlists = {
+                'deep': ['Deeper Love.mp3', 'Deep Inside.mp3', 'Deep House Nation.mp3'],
+                'funk': ['Get Down.mp3', 'Funky Town.mp3', 'Funk Soul Brother.mp3'],
+                'house': ['House Music.mp3', 'Club House.mp3', 'House Party.mp3']
+            };
+    
+            const songs = playlists[folderName] || [];
             songs.forEach(song => {
                 const li = document.createElement('li');
                 li.textContent = song;
-                li.onclick = () => playAudio(`/audio/${folderName}/${song}`);
+                li.onclick = () => playAudio(`audio/${folderName}/${song}`);
                 playlist.appendChild(li);
             });
         }

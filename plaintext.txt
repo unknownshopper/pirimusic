@@ -1,0 +1,13 @@
+audio/
+  deep/
+    Deeper Love.mp3
+    Deep Inside.mp3
+    Deep House Nation.mp3
+  funk/
+    Get Down.mp3
+    Funky Town.mp3
+    Funk Soul Brother.mp3
+  house/
+    House Music.mp3
+    Club House.mp3
+    House Party.mp3
