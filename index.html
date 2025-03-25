@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o X </title>
+    <title>Mp3o</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -134,7 +134,11 @@
 </head>
 <body>
     <div id="login-section" class="login-container">
-        <h1>Mp3o</h1>
+        <h1>Mp3(o)</h1>
+       <ul>
+        <li>admin</li>
+        <li>password123</li>
+       </ul>
         <form class="login-form" onsubmit="return handleLogin(event)">
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
@@ -218,9 +222,9 @@
             playlist.innerHTML = '';
 
             const playlists = {
-                'deep': ['Deeper Love.mp3', 'Deep Inside.mp3', 'Deep House Nation.mp3'],
-                'funk': ['Get Down.mp3', 'Funky Town.mp3', 'Funk Soul Brother.mp3'],
-                'house': ['House Music.mp3', 'Club House.mp3', 'House Party.mp3']
+                'deep': ['deeper-love.mp3', 'deep-inside.mp3', 'deep-house-nation.mp3'],
+                'funk': ['get-down.mp3', 'funky-town.mp3', 'funk-soul-brother.mp3'],
+                'house': ['house-music.mp3', 'club-house.mp3', 'house-party.mp3']
             };
 
             const songs = playlists[folderName] || [];
@@ -236,11 +240,27 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             audioPlayer.src = audioPath;
-            audioPlayer.play();
             
-            // Update track info
-            const trackName = audioPath.split('/').pop();
-            document.getElementById('track-info').innerHTML = `Now Playing: ${trackName}`;
+            // Add error handling
+            audioPlayer.onerror = function() {
+                console.error('Error loading audio file:', audioPath);
+                document.getElementById('track-info').innerHTML = `Error: Could not load audio file`;
+            };
+            
+            // Add loading indicator
+            document.getElementById('track-info').innerHTML = `Loading: ${audioPath.split('/').pop()}`;
+            
+            audioPlayer.oncanplay = function() {
+                audioPlayer.play()
+                    .then(() => {
+                        const trackName = audioPath.split('/').pop();
+                        document.getElementById('track-info').innerHTML = `Now Playing: ${trackName}`;
+                    })
+                    .catch(error => {
+                        console.error('Error playing audio:', error);
+                        document.getElementById('track-info').innerHTML = `Error: Could not play audio`;
+                    });
+            };
         }
     </script>
 </body>
