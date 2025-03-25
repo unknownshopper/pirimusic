@@ -185,7 +185,7 @@
     </div>
 
     <script>
-        // Remove all duplicate functions and keep only these versions
+        // Keep only this version of handleLogin
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
@@ -202,35 +202,30 @@
             return false;
         }
 
+        // Keep only one DOMContentLoaded listener
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
         });
 
-        // Remove these sections completely:
-        // - The second handleLogin function with fetch
-        // - The fetch-based authentication check
-        // - The fetch-based switchFolder function
-        // - Remove duplicate DOMContentLoaded listeners
+        // Keep only this version of switchFolder
         function switchFolder(folderName) {
-            // Update active button state
             document.querySelectorAll('.folder-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.textContent.toLowerCase() === folderName) {
                     btn.classList.add('active');
                 }
             });
-    
+
             const playlist = document.getElementById('playlist');
             playlist.innerHTML = '';
-    
-            // Static playlist configuration
+
             const playlists = {
                 'deep': ['Deeper Love.mp3', 'Deep Inside.mp3', 'Deep House Nation.mp3'],
                 'funk': ['Get Down.mp3', 'Funky Town.mp3', 'Funk Soul Brother.mp3'],
                 'house': ['House Music.mp3', 'Club House.mp3', 'House Party.mp3']
             };
-    
+
             const songs = playlists[folderName] || [];
             songs.forEach(song => {
                 const li = document.createElement('li');
@@ -238,314 +233,6 @@
                 li.onclick = () => playAudio(`audio/${folderName}/${song}`);
                 playlist.appendChild(li);
             });
-        }
-
-        // Helper function to manage static playlists
-        function getSongsForFolder(folderName) {
-            // Replace with your actual song lists
-            const playlists = {
-                'deep': ['song1.mp3', 'song2.mp3'],
-                'funk': ['song3.mp3', 'song4.mp3'],
-                'house': ['song5.mp3', 'song6.mp3']
-            };
-            return playlists[folderName] || [];
-        }
-
-        // Check if user is already logged in when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // For now, we'll just show the login screen
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('player-section').classList.add('hidden');
-        });
-
-        // Audio visualization
-        let audioContext;
-        let analyser;
-        let source;
-
-        function setupAudioVisualizer() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 1024; // Increased for smoother line
-            }
-
-            const audioElement = document.getElementById('audio-player');
-            const canvas = document.getElementById('visualizer');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 120;
-            const ctx = canvas.getContext('2d');
-
-            if (!source) {
-                source = audioContext.createMediaElementSource(audioElement);
-                source.connect(analyser);
-                analyser.connect(audioContext.destination);
-            }
-
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            const WIDTH = canvas.width;
-            const HEIGHT = canvas.height;
-            
-            function renderFrame() {
-                requestAnimationFrame(renderFrame);
-                analyser.getByteTimeDomainData(dataArray);
-                
-                // Create gradient background
-                const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-                gradient.addColorStop(0, 'rgba(0,0,0,0.9)');
-                gradient.addColorStop(1, 'rgba(0,0,0,0.7)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-                // Draw the line
-                ctx.beginPath();
-                ctx.lineWidth = 3;  // Made thicker with love!
-                ctx.strokeStyle = '#4CAF50';
-                ctx.shadowBlur = 20;  // Extra glow
-                ctx.shadowColor = '#4CAF50';
-
-                const sliceWidth = WIDTH / bufferLength;
-                let x = 0;
-
-                for (let i = 0; i < bufferLength; i++) {
-                    const v = dataArray[i] / 128.0;
-                    const y = v * HEIGHT/2;
-
-                    if (i === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                    x += sliceWidth;
-                }
-
-                ctx.lineTo(WIDTH, HEIGHT/2);
-                ctx.stroke();
-
-                // Add afterglow effect
-                ctx.strokeStyle = 'rgba(76, 175, 80, 0.2)';  // Changed to green with transparency
-                ctx.lineWidth = 4;
-                ctx.stroke();
-            }
-            renderFrame();
-        }
-
-        // Update playAudio function to initialize visualizer
-        const originalPlayAudio = playAudio;
-        playAudio = function(audioPath) {
-            originalPlayAudio(audioPath);
-            if (audioContext?.state === 'suspended') {
-                audioContext.resume();
-            }
-            setupAudioVisualizer();
-        };
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-    
-            console.log('Sending login request:', { username, password });
-    
-            fetch('https://your-production-server.com/api/login', { 
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({ username, password })
-            })
-            .then(response => {
-                console.log('Response received:', response);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Login result:', data);
-                if (data.success) {
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('player-section').classList.remove('hidden');
-                    switchFolder('deep');
-                } else {
-                    alert('Invalid username or password');
-                }
-            })
-            .catch(error => {
-                console.error('Login error:', error);
-                alert('Login failed. Please check if the server is running.');
-            });
-    
-            return false;
-        }
-
-        // Check authentication status when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Also update the auth check fetch
-            fetch('https://your-production-server.com/api/check-auth')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.authenticated) {
-                        document.getElementById('login-section').classList.add('hidden');
-                        document.getElementById('player-section').classList.remove('hidden');
-                        switchFolder('deep');
-                    }
-                });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const audioPlayer = document.getElementById('audio-player');
-            const playlist = document.getElementById('playlist');
-            
-            // Initialize with MP3 folder
-            switchFolder('mp3');
-        });
-
-        function switchFolder(folderName) {
-            // Update active button state
-            document.querySelectorAll('.folder-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.toLowerCase() === folderName) {
-                    btn.classList.add('active');
-                }
-            });
-
-            // Fetch and display files from the selected folder
-            // And update the folder fetch
-            fetch(`https://your-production-server.com/${folderName}`)
-                .then(response => response.json())
-                .then(files => {
-                    const playlist = document.getElementById('playlist');
-                    playlist.innerHTML = ''; // Clear current playlist
-
-                    files.forEach(file => {
-                        if (file.endsWith('.mp3')) {
-                            const li = document.createElement('li');
-                            li.textContent = file;
-                            li.onclick = () => playAudio(`/${folderName}/${file}`);
-                            playlist.appendChild(li);
-                        }
-                    });
-                })
-                .catch(error => console.error('Error loading playlist:', error));
-        }
-
-        let isLoopEnabled = false;
-        let isRepeatEnabled = false;
-        let isRepeatAllEnabled = false;
-        let isRandomEnabled = false;
-        let currentPlaylist = [];
-
-        function toggleRepeat() {
-            isRepeatEnabled = !isRepeatEnabled;
-            if (isRepeatEnabled) {
-                isRepeatAllEnabled = false;
-                document.getElementById('repeat-all-btn').classList.remove('active');
-            }
-            document.getElementById('repeat-btn').classList.toggle('active');
-            document.getElementById('audio-player').loop = isRepeatEnabled;
-        }
-
-        function toggleRepeatAll() {
-            isRepeatAllEnabled = !isRepeatAllEnabled;
-            if (isRepeatAllEnabled) {
-                isRepeatEnabled = false;
-                document.getElementById('repeat-btn').classList.remove('active');
-                document.getElementById('audio-player').loop = false;
-            }
-            document.getElementById('repeat-all-btn').classList.toggle('active');
-        }
-
-        // Update the playAudio function's onended handler
-        function playAudio(audioPath) {
-            const audioPlayer = document.getElementById('audio-player');
-            audioPlayer.src = audioPath;
-            audioPlayer.play();
-
-            // Update track info with scrolling effect
-            const trackInfo = document.getElementById('track-info');
-            const fileName = audioPath.split('/').pop();
-            trackInfo.innerHTML = `<span>🎵 Now Playing: ${fileName} 🎵</span>`;
-
-            // Highlight current playing track
-            document.querySelectorAll('.playlist li').forEach(item => {
-                if (item.textContent === audioPath.split('/').pop()) {
-                    item.classList.add('playing');
-                } else {
-                    item.classList.remove('playing');
-                }
-            });
-
-            // Add ended event listener for continuous play
-            audioPlayer.onended = function() {
-                if (isRepeatEnabled) {
-                    audioPlayer.play();
-                } else if (isRepeatAllEnabled || isRandomEnabled) {
-                    playNext();
-                }
-            };
-        }
-
-        function toggleRandom() {
-            isRandomEnabled = !isRandomEnabled;
-            document.getElementById('random-btn').classList.toggle('active');
-        }
-
-        function playNext() {
-            const playlist = document.querySelectorAll('.playlist li');
-            currentPlaylist = Array.from(playlist);
-            
-            if (currentPlaylist.length === 0) return;
-
-            const currentTrack = document.querySelector('.playlist li.playing');
-            let nextIndex;
-
-            if (isRandomEnabled) {
-                nextIndex = Math.floor(Math.random() * currentPlaylist.length);
-            } else {
-                const currentIndex = Array.from(playlist).indexOf(currentTrack);
-                nextIndex = (currentIndex + 1) % currentPlaylist.length;
-            }
-
-            const nextTrack = currentPlaylist[nextIndex];
-            if (nextTrack) {
-                nextTrack.click();
-            }
-        }
-
-        // Update playAudio function to handle continuous playback
-        // Remove the original playAudio declaration and keep this version
-        function playAudio(audioPath) {
-        const audioPlayer = document.getElementById('audio-player');
-        audioPlayer.src = audioPath;
-        audioPlayer.play();
-        
-        // Update track info with scrolling effect
-        const trackInfo = document.getElementById('track-info');
-        const fileName = audioPath.split('/').pop();
-        trackInfo.innerHTML = `<span>🎵 Now Playing: ${fileName} 🎵</span>`;
-        
-        // Highlight current playing track
-        document.querySelectorAll('.playlist li').forEach(item => {
-        if (item.textContent === audioPath.split('/').pop()) {
-        item.classList.add('playing');
-        } else {
-        item.classList.remove('playing');
-        }
-        });
-        
-        // Add ended event listener for continuous play
-        audioPlayer.onended = function() {
-        if (isRepeatEnabled) {
-        audioPlayer.play();
-        } else {
-        playNext();
-        }
-        };
-        
-        // Initialize visualizer
-        if (audioContext?.state === 'suspended') {
-        audioContext.resume();
-        }
-        setupAudioVisualizer();
         }
     </script>
 </body>
