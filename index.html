@@ -191,7 +191,7 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // For demo purposes - replace with your actual authentication
+            // For demo purposes
             if (username === "demo" && password === "demo123") {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('player-section').classList.remove('hidden');
@@ -199,8 +199,47 @@
             } else {
                 alert('Invalid username or password');
             }
-
             return false;
+        }
+
+        // Simplify the DOMContentLoaded handler
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('player-section').classList.add('hidden');
+        });
+
+        function switchFolder(folderName) {
+            // Update active button state
+            document.querySelectorAll('.folder-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === folderName) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update to use static file structure
+            const playlist = document.getElementById('playlist');
+            playlist.innerHTML = ''; // Clear current playlist
+            
+            // Add your static playlist items here
+            const songs = getSongsForFolder(folderName);
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                li.textContent = song;
+                li.onclick = () => playAudio(`/audio/${folderName}/${song}`);
+                playlist.appendChild(li);
+            });
+        }
+
+        // Helper function to manage static playlists
+        function getSongsForFolder(folderName) {
+            // Replace with your actual song lists
+            const playlists = {
+                'deep': ['song1.mp3', 'song2.mp3'],
+                'funk': ['song3.mp3', 'song4.mp3'],
+                'house': ['song5.mp3', 'song6.mp3']
+            };
+            return playlists[folderName] || [];
         }
 
         // Check if user is already logged in when page loads
@@ -299,7 +338,7 @@
     
             console.log('Sending login request:', { username, password });
     
-            fetch('http://localhost:3001/api/login', { 
+            fetch('https://your-production-server.com/api/login', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -332,7 +371,7 @@
         // Check authentication status when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Also update the auth check fetch
-            fetch('http://localhost:3001/api/check-auth')
+            fetch('https://your-production-server.com/api/check-auth')
                 .then(response => response.json())
                 .then(data => {
                     if (data.authenticated) {
@@ -362,7 +401,7 @@
 
             // Fetch and display files from the selected folder
             // And update the folder fetch
-            fetch(`http://localhost:3001/${folderName}`)
+            fetch(`https://your-production-server.com/${folderName}`)
                 .then(response => response.json())
                 .then(files => {
                     const playlist = document.getElementById('playlist');
