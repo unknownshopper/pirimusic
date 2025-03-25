@@ -36,6 +36,12 @@
         .playlist li:hover {
             background-color: #f5f5f5;
         }
+        
+        .playlist li.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
         .folder-buttons {
             margin: 20px 0;
             text-align: center;
@@ -275,12 +281,12 @@
 
         // Add missing playAudio function
         // Agregar este estilo en la sección de <style>
-        .playlist li.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        // Modificar la función playAudio
+        // Remove these lines from the JavaScript section
+        // .playlist li.active {
+        //     background-color: #4CAF50;
+        //     color: white;
+        // }
+        
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
@@ -290,8 +296,9 @@
             });
             
             // Agregar clase active al item actual
+            const currentSong = audioPath.split('/').pop();
             const currentItem = Array.from(document.querySelectorAll('.playlist li'))
-                .find(item => item.textContent === audioPath.split('/').pop());
+                .find(item => item.textContent.includes(currentSong));
             if (currentItem) {
                 currentItem.classList.add('active');
             }
@@ -372,4 +379,30 @@
     <a href="mailto:the@unknownshoppers.com"> <img src="./img/mailcon.png" alt="icon" width="50%"> </a>
 </footer>
 </html>
+@media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .folder-btn {
+                margin: 5px 2px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .option-btn {
+                margin: 5px 2px;
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .player-container {
+                padding: 10px;
+            }
+            
+            .login-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+        }
           
