@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piri Music X - style</title>
+    <title>Piri Music</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -186,12 +186,13 @@
 
     <script>
         // Add this near the beginning of your script section
+        // Remove the duplicate handleLogin function and keep only this version
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
     
-            // Simple authentication for GitHub Pages
+            // Simple static authentication
             if (username === "admin" && password === "password123") {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('player-section').classList.remove('hidden');
@@ -202,12 +203,13 @@
             return false;
         }
     
-        // Simplified DOMContentLoaded listener
+        // Simplify the DOMContentLoaded listener (remove fetch calls)
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
         });
     
+        // Remove the duplicate switchFolder function and keep only the static version
         function switchFolder(folderName) {
             // Update active button state
             document.querySelectorAll('.folder-btn').forEach(btn => {
