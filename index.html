@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3 playlist</title>
+    <title>Mp3 list</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -30,22 +30,21 @@
             margin: 20px 0;
             max-height: 400px;
             overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 4px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
         
         .playlist li {
-            padding: 12px 15px;
-            cursor: pointer;
+            padding: 15px;
             border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
         }
         
         .playlist li:hover {
-            background-color: #f5f5f5;
+            background-color: #f0f0f0;
             padding-left: 20px;
         }
         
@@ -227,6 +226,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
+            if (localStorage.getItem('isLoggedIn')) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('player-section').classList.remove('hidden');
+                switchFolder('deep'); // Esto cargará la lista inicial
+            }
         });
 
         function switchFolder(folderName) {
@@ -291,53 +295,39 @@
             });
         }
 
-        // Add missing playAudio function
-        // Agregar este estilo en la sección de <style>
-        // Remove these lines from the JavaScript section
-        // .playlist li.active {
-        //     background-color: #4CAF50;
-        //     color: white;
-        // }
-        
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Remover clase active de todos los items
+            // Actualizar UI primero
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Agregar clase active al item actual
             const currentSong = audioPath.split('/').pop();
             const currentItem = Array.from(document.querySelectorAll('.playlist li'))
                 .find(item => item.textContent.includes(currentSong));
+            
             if (currentItem) {
                 currentItem.classList.add('active');
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             
-            // Configurar el visualizador
-            setupVisualizer(audioPlayer);
+            // Intentar reproducir
             const fullPath = './' + audioPath;
             audioPlayer.src = fullPath;
             
-            audioPlayer.onerror = function(e) {
-                console.error('Error de audio:', e);
-                console.error('Código de error:', audioPlayer.error.code);
-                console.error('Mensaje de error:', audioPlayer.error.message);
-                document.getElementById('track-info').innerHTML = `Error: No se pudo cargar el archivo (${audioPath})`;
-            };
+            document.getElementById('track-info').innerHTML = `Cargando: ${currentSong}`;
             
-            document.getElementById('track-info').innerHTML = `Cargando: ${audioPath.split('/').pop()}`;
+            audioPlayer.load(); // Forzar recarga del audio
             
             audioPlayer.oncanplay = function() {
                 audioPlayer.play()
                     .then(() => {
-                        const trackName = audioPath.split('/').pop();
-                        document.getElementById('track-info').innerHTML = `▶️ Reproduciendo: ${trackName}`;
+                        document.getElementById('track-info').innerHTML = `▶️ Reproduciendo: ${currentSong}`;
                     })
                     .catch(error => {
                         console.error('Error al reproducir:', error);
-                        document.getElementById('track-info').innerHTML = `Error: No se pudo reproducir`;
+                        document.getElementById('track-info').innerHTML = `❌ Error: No se pudo reproducir ${currentSong}`;
                     });
             };
         }
