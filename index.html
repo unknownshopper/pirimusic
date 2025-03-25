@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piri Music</title>
+    <title>Piri Music xx</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -185,13 +185,12 @@
     </div>
 
     <script>
-        // Add this near the beginning of your script section
-        // Remove the duplicate handleLogin function and keep only this version
+        // Remove all duplicate functions and keep only these versions
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-    
+
             // Simple static authentication
             if (username === "admin" && password === "password123") {
                 document.getElementById('login-section').classList.add('hidden');
@@ -202,14 +201,17 @@
             }
             return false;
         }
-    
-        // Simplify the DOMContentLoaded listener (remove fetch calls)
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
         });
-    
-        // Remove the duplicate switchFolder function and keep only the static version
+
+        // Remove these sections completely:
+        // - The second handleLogin function with fetch
+        // - The fetch-based authentication check
+        // - The fetch-based switchFolder function
+        // - Remove duplicate DOMContentLoaded listeners
         function switchFolder(folderName) {
             // Update active button state
             document.querySelectorAll('.folder-btn').forEach(btn => {
