@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o</title>
+    <title>Mp3(o)</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -36,6 +36,12 @@
         .playlist li:hover {
             background-color: #f5f5f5;
         }
+        
+        .playlist li.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
         .folder-buttons {
             margin: 20px 0;
             text-align: center;
@@ -134,8 +140,9 @@
 </head>
 <body>
     <div id="login-section" class="login-container">
-        <h1>Mp3(o)</h1>
+        <h1>Login</h1>
        <ul>
+        
         <li>admin</li>
         <li>password123</li>
        </ul>
@@ -222,50 +229,180 @@
             playlist.innerHTML = '';
 
             const playlists = {
-                'deep': ['deeper-love.mp3', 'deep-inside.mp3', 'deep-house-nation.mp3'],
-                'funk': ['get-down.mp3', 'funky-town.mp3', 'funk-soul-brother.mp3'],
-                'house': ['house-music.mp3', 'club-house.mp3', 'house-party.mp3']
+                'deep': [
+                    'AYYBO - RIZZ (Extended Mix).mp3',
+                    'Basement Jaxx - Red Alert (Eric Morillo + Harry Romero Dub).mp3',
+                    'Chemical brothers -. Star Guitar.mp3',
+                    'Earth n Days - The Kinda Love (CASSIMM Extended Remix).mp3',
+                    'pirate_copy_-_take_me_to_the_disco_(original_mix).mp3',
+                    'pirate_copy_-_this_time_(original_mix).mp3',
+                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(extended_mix).mp3',
+                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(leon_(italy)_extended_mix).mp3',
+                    'pirate_copy-be_right_feat._liam_craig_(instrumental_mix).mp3',
+                    'pirate_copy-be_right_feat._liam_craig_(vocal_mix).mp3',
+                    'pirate_copy-big_(original_mix).mp3',
+                    'pirate_copy-jamdub_(original_mix).mp3',
+                    'pirate_copy-ric_funk-8a8c2c91.mp3'
+                ],
+                'funk': [
+                    'Supermen Lovers - Starlight (Dub Version).mp3',
+                    'Sussie 4 - Musica Moderna -  02 - On Time.mp3',
+                    'Sussie 4 - Musica Moderna -  03 - FLY.mp3',
+                    'Sussie 4 - Musica Moderna -  05 - ESCAPAR.mp3',
+                    'Sussie 4 - Musica Moderna -  06 - Conciencia Latina.mp3'
+                ],
+                'house': [
+                    'Pirate Copy - Party Time  (Original  Mix).mp3',
+                    'Pirate Copy - Ric Funk (Original Mix).mp3',
+                    'pirate_copy_-_101_problems_(extended_mix).mp3',
+                    'pirate_copy_-_deep_in_my_garage_(extended_mix).mp3',
+                    'pirate_copy_-_good_vibrations_(original_mix).mp3',
+                    'pirate_copy_-_i_cant_stop_(extended_mix).mp3',
+                    'pirate_copy_-_love_will_save_the_day_(extended_mix).mp3',
+                    'pirate_copy_-_take_me_to_the_disco_(original_mix).mp3',
+                    'pirate_copy_-_this_time_(original_mix).mp3',
+                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(extended_mix).mp3',
+                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(leon_(italy)_extended_mix).mp3'
+                ]
             };
 
             const songs = playlists[folderName] || [];
-            songs.forEach(song => {
+            songs.forEach((song, index) => {
                 const li = document.createElement('li');
-                li.textContent = song;
+                li.textContent = `${index + 1}. ${song}`;
                 li.onclick = () => playAudio(`audio/${folderName}/${song}`);
+                // Si esta canción está reproduciéndose, agregar clase active
+                if (audioPlayer.src.endsWith(song)) {
+                    li.classList.add('active');
+                }
                 playlist.appendChild(li);
             });
         }
 
         // Add missing playAudio function
+        // Agregar este estilo en la sección de <style>
+        // Remove these lines from the JavaScript section
+        // .playlist li.active {
+        //     background-color: #4CAF50;
+        //     color: white;
+        // }
+        
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
-            audioPlayer.src = audioPath;
             
-            // Add error handling
-            audioPlayer.onerror = function() {
-                console.error('Error loading audio file:', audioPath);
-                document.getElementById('track-info').innerHTML = `Error: Could not load audio file`;
+            // Remover clase active de todos los items
+            document.querySelectorAll('.playlist li').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Agregar clase active al item actual
+            const currentSong = audioPath.split('/').pop();
+            const currentItem = Array.from(document.querySelectorAll('.playlist li'))
+                .find(item => item.textContent.includes(currentSong));
+            if (currentItem) {
+                currentItem.classList.add('active');
+            }
+            
+            // Configurar el visualizador
+            setupVisualizer(audioPlayer);
+            const fullPath = './' + audioPath;
+            audioPlayer.src = fullPath;
+            
+            audioPlayer.onerror = function(e) {
+                console.error('Error de audio:', e);
+                console.error('Código de error:', audioPlayer.error.code);
+                console.error('Mensaje de error:', audioPlayer.error.message);
+                document.getElementById('track-info').innerHTML = `Error: No se pudo cargar el archivo (${audioPath})`;
             };
             
-            // Add loading indicator
-            document.getElementById('track-info').innerHTML = `Loading: ${audioPath.split('/').pop()}`;
+            document.getElementById('track-info').innerHTML = `Cargando: ${audioPath.split('/').pop()}`;
             
             audioPlayer.oncanplay = function() {
                 audioPlayer.play()
                     .then(() => {
                         const trackName = audioPath.split('/').pop();
-                        document.getElementById('track-info').innerHTML = `Now Playing: ${trackName}`;
+                        document.getElementById('track-info').innerHTML = `▶️ Reproduciendo: ${trackName}`;
                     })
                     .catch(error => {
-                        console.error('Error playing audio:', error);
-                        document.getElementById('track-info').innerHTML = `Error: Could not play audio`;
+                        console.error('Error al reproducir:', error);
+                        document.getElementById('track-info').innerHTML = `Error: No se pudo reproducir`;
                     });
             };
         }
+
+        // Agregar función del visualizador
+        function setupVisualizer(audioElement) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaElementSource(audioElement);
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function draw() {
+                const WIDTH = canvas.width;
+                const HEIGHT = canvas.height;
+                
+                requestAnimationFrame(draw);
+                
+                analyser.getByteFrequencyData(dataArray);
+                
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                
+                const barWidth = (WIDTH / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+                
+                for(let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2;
+                    
+                    ctx.fillStyle = `rgb(${barHeight + 100}, 204, 80)`;
+                    ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+                    
+                    x += barWidth + 1;
+                }
+            }
+            
+            draw();
+        }
     </script>
+
 </body>
 <footer>
-    <a href="mailto:the@unknownshoppers.com"> <img src="./img/mailcon.png" alt="icon"> </a>
+    <a href="mailto:the@unknownshoppers.com"> <img src="./img/mailcon.png" alt="icon" width="50%"> </a>
 </footer>
 </html>
+@media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .folder-btn {
+                margin: 5px 2px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .option-btn {
+                margin: 5px 2px;
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .player-container {
+                padding: 10px;
+            }
+            
+            .login-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+        }
           
