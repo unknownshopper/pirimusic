@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.player-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+audio {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.playlist {
+    list-style: none;
+    padding: 0;
+}
+
+.playlist li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.playlist li:hover {
+    background-color: #f5f5f5;
+}
+
+.folder-buttons {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.folder-btn {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.folder-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.folder-btn.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.login-container {
+    background: linear-gradient(145deg, #ffffff, #f8f8f8);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 400px;
+    margin: 100px auto;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 15px 0;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.login-form input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+    outline: none;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(145deg, #43a047, #4CAF50);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.hidden {
+    display: none;
+}
+
+.playback-options {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.option-btn {
+    padding: 8px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+}
+
+.option-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.scrolling-text {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    padding: 5px 0;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.scrolling-text span {
+    display: inline-block;
+    animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
