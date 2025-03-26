@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o FULL007</title>
+    <title>Mp7</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -147,10 +147,11 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Adjust path for GitHub Pages
-            const fullPath = audioPath.startsWith('/') ? audioPath.substring(1) : audioPath;
-            const repoPath = `/trueradio/${fullPath}`; // Add repository name to path
-            audioPlayer.src = repoPath;
+            // Fix path handling for GitHub Pages
+            const fullPath = audioPath.startsWith('/') ? audioPath : `/${audioPath}`;
+            audioPlayer.src = fullPath;
+            
+            console.log('Attempting to play:', fullPath); // Debug log
             
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
@@ -168,6 +169,7 @@
             audioPlayer.onerror = function(e) {
                 console.error('Error loading audio:', audioPath);
                 console.error('Full path tried:', fullPath);
+                console.error('Error details:', e.target.error); // Additional error info
                 document.getElementById('track-info').innerHTML = 
                     `❌ Error loading: ${currentSong}`;
             };
