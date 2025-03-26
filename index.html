@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3 list on</title>
+    <title>Mp3 list</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -24,47 +24,28 @@
             width: 100%;
             margin: 20px 0;
         }
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: #f0f0f0;
-            }
-            
-            .player-container {
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            audio {
-                width: 100%;
-                margin: 20px 0;
-            }
-            .playlist {
-                list-style: none;
-                padding: 0;
-                margin: 20px 0;
-                max-height: 400px;
-                overflow-y: auto;
-                background: white;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                display: block !important; /* Forzar visualización */
-            }
-            
-            .playlist li {
-                padding: 15px;
-                margin: 5px 0;
-                border-bottom: 1px solid #eee;
-                cursor: pointer;
-                font-size: 14px;
-                transition: all 0.2s ease;
-                display: block !important; /* Forzar visualización */
-            }
-        </style>
+        /* Remove duplicate style tag and merge these styles */
+        .playlist {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: block !important;
+        }
+        
+        .playlist li {
+            padding: 15px;
+            margin: 5px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: block !important;
+        }
         .playlist li:hover {
             background-color: #f0f0f0;
             padding-left: 20px;
