@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3 o</title>
+    <title>Mp3</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -147,8 +147,12 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Simplify path handling - use the path as-is
-            audioPlayer.src = audioPath;
+            // Ensure correct path for GitHub Pages
+            const repoName = 'trueradio';
+            const fullPath = `/${repoName}/${audioPath}`;
+            audioPlayer.src = fullPath;
+            
+            console.log('Playing audio from:', fullPath); // Debug log
             
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
@@ -163,6 +167,23 @@
                 currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
             
+            // Reset and reload audio
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            audioPlayer.load();
+            
+            // Try to play
+            const playPromise = audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        document.getElementById('track-info').innerHTML = `▶️ Reproduciendo: ${currentSong}`;
+                    })
+                    .catch(error => {
+                        console.error('Error al reproducir:', error);
+                        document.getElementById('track-info').innerHTML = `❌ Error: No se pudo reproducir ${currentSong}`;
+                    });
+            }
             audioPlayer.onerror = function(e) {
                 console.error('Error loading audio:', audioPath);
                 document.getElementById('track-info').innerHTML = 
