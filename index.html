@@ -154,8 +154,6 @@
             
             // Fix the path handling
             const fullPath = audioPath.startsWith('/') ? audioPath.substring(1) : audioPath;
-            
-            // Remove the duplicate fullPath declaration
             audioPlayer.src = fullPath;
             
             document.querySelectorAll('.playlist li').forEach(item => {
@@ -189,6 +187,25 @@
                         console.error('Error al reproducir:', error);
                         document.getElementById('track-info').innerHTML = `❌ Error: No se pudo reproducir ${currentSong}`;
                     });
+            };
+            // Add ended event listener for playlist control
+            audioPlayer.onended = function() {
+                if (isRepeatOne) return; // Already handled by loop property
+                
+                const folderName = audioPath.split('/')[1];
+                currentPlaylist = playlists[folderName];
+                currentIndex = currentPlaylist.indexOf(audioPath.split('/').pop());
+                
+                let nextIndex;
+                if (isRandom) {
+                    nextIndex = Math.floor(Math.random() * currentPlaylist.length);
+                } else {
+                    nextIndex = (currentIndex + 1) % currentPlaylist.length;
+                }
+                
+                if (nextIndex !== 0 || isRepeatAll) {
+                    playAudio(`audio/${folderName}/${currentPlaylist[nextIndex]}`);
+                }
             };
         }
 
