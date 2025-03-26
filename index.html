@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o FULL</title>
+    <title>Mp3o FULL007</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -147,9 +147,10 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Fix the path handling
+            // Adjust path for GitHub Pages
             const fullPath = audioPath.startsWith('/') ? audioPath.substring(1) : audioPath;
-            audioPlayer.src = fullPath;
+            const repoPath = `/trueradio/${fullPath}`; // Add repository name to path
+            audioPlayer.src = repoPath;
             
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
@@ -196,49 +197,53 @@
 
         // Agregar función del visualizador
         function setupVisualizer(audioElement) {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const analyser = audioContext.createAnalyser();
-            const source = audioContext.createMediaElementSource(audioElement);
-            const canvas = document.getElementById('visualizer');
-            const ctx = canvas.getContext('2d');
-            
-            // Make canvas responsive
-            canvas.width = canvas.offsetWidth;
-            window.addEventListener('resize', () => {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaElementSource(audioElement);
+                const canvas = document.getElementById('visualizer');
+                const ctx = canvas.getContext('2d');
+                
+                // Make canvas responsive
                 canvas.width = canvas.offsetWidth;
-            });
-            
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-            
-            function draw() {
-                const WIDTH = canvas.width;
-                const HEIGHT = canvas.height;
+                window.addEventListener('resize', () => {
+                    canvas.width = canvas.offsetWidth;
+                });
                 
-                requestAnimationFrame(draw);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
                 
-                analyser.getByteFrequencyData(dataArray);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
                 
-                ctx.fillStyle = '#f0f0f0';
-                ctx.fillRect(0, 0, WIDTH, HEIGHT);
-                
-                const barWidth = (WIDTH / bufferLength) * 2.5;
-                let barHeight;
-                let x = 0;
-                
-                for(let i = 0; i < bufferLength; i++) {
-                    barHeight = dataArray[i] / 2;
-                    ctx.fillStyle = `rgb(${barHeight + 100}, 204, 80)`;
-                    ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-                    x += barWidth + 1;
+                function draw() {
+                    const WIDTH = canvas.width;
+                    const HEIGHT = canvas.height;
+                    
+                    requestAnimationFrame(draw);
+                    
+                    analyser.getByteFrequencyData(dataArray);
+                    
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                    
+                    const barWidth = (WIDTH / bufferLength) * 2.5;
+                    let barHeight;
+                    let x = 0;
+                    
+                    for(let i = 0; i < bufferLength; i++) {
+                        barHeight = dataArray[i] / 2;
+                        ctx.fillStyle = `rgb(${barHeight + 100}, 204, 80)`;
+                        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+                        x += barWidth + 1;
+                    }
                 }
+                
+                draw();
+            } catch (error) {
+                console.error('Error setting up visualizer:', error);
             }
-            
-            draw();
         }
     </script>
 
