@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp7</title>
+    <title>Mp3 o</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -147,11 +147,8 @@
         function playAudio(audioPath) {
             const audioPlayer = document.getElementById('audio-player');
             
-            // Fix path handling for GitHub Pages
-            const fullPath = audioPath.startsWith('/') ? audioPath : `/${audioPath}`;
-            audioPlayer.src = fullPath;
-            
-            console.log('Attempting to play:', fullPath); // Debug log
+            // Simplify path handling - use the path as-is
+            audioPlayer.src = audioPath;
             
             document.querySelectorAll('.playlist li').forEach(item => {
                 item.classList.remove('active');
@@ -168,13 +165,11 @@
             
             audioPlayer.onerror = function(e) {
                 console.error('Error loading audio:', audioPath);
-                console.error('Full path tried:', fullPath);
-                console.error('Error details:', e.target.error); // Additional error info
                 document.getElementById('track-info').innerHTML = 
                     `❌ Error loading: ${currentSong}`;
             };
             
-            audioPlayer.load(); // Forzar recarga del audio
+            audioPlayer.load();
             
             audioPlayer.oncanplay = function() {
                 audioPlayer.play()
