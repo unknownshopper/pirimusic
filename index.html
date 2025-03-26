@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3o</title>
+    <title>Mp3o FULL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -41,7 +41,7 @@
         <audio id="audio-player" controls>
             Your browser does not support the audio element.
         </audio>
-        <canvas id="visualizer" height="60"></canvas>
+        <canvas id="visualizer" height="60" style="width: 100%; margin: 10px 0;"></canvas>
         <div id="track-info" class="scrolling-text">
             Now Playing: Select a track to begin
         </div>
@@ -97,10 +97,15 @@
             console.log('DOM loaded, initializing player...');
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
+            
+            // Initialize visualizer
+            const audioPlayer = document.getElementById('audio-player');
+            setupVisualizer(audioPlayer);
+            
             if (localStorage.getItem('isLoggedIn')) {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('player-section').classList.remove('hidden');
-                switchFolder('deep'); // Esto cargará la lista inicial
+                switchFolder('deep');
             }
         });
 
@@ -197,6 +202,12 @@
             const canvas = document.getElementById('visualizer');
             const ctx = canvas.getContext('2d');
             
+            // Make canvas responsive
+            canvas.width = canvas.offsetWidth;
+            window.addEventListener('resize', () => {
+                canvas.width = canvas.offsetWidth;
+            });
+            
             source.connect(analyser);
             analyser.connect(audioContext.destination);
             
@@ -221,10 +232,8 @@
                 
                 for(let i = 0; i < bufferLength; i++) {
                     barHeight = dataArray[i] / 2;
-                    
                     ctx.fillStyle = `rgb(${barHeight + 100}, 204, 80)`;
                     ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-                    
                     x += barWidth + 1;
                 }
             }
