@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3 list yyy</title>
+    <title>Mp3 list</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -64,6 +64,29 @@
     </div>
 
     <script>
+        // Define playlists at the beginning
+        const playlists = {
+            'deep': [
+                'AYYBO - RIZZ (Extended Mix).mp3',
+                'Basement Jaxx - Red Alert (Eric Morillo + Harry Romero Dub).mp3',
+                'Chemical brothers -. Star Guitar.mp3',
+                'Earth n Days - The Kinda Love (CASSIMM Extended Remix).mp3',
+                'pirate_copy_-_take_me_to_the_disco_(original_mix).mp3'
+            ],
+            'funk': [
+                'Supermen Lovers - Starlight (Dub Version).mp3',
+                'Sussie 4 - Musica Moderna -  02 - On Time.mp3',
+                'Sussie 4 - Musica Moderna -  03 - FLY.mp3',
+                'Sussie 4 - Musica Moderna -  05 - ESCAPAR.mp3'
+            ],
+            'house': [
+                'Pirate Copy - Party Time  (Original  Mix).mp3',
+                'Pirate Copy - Ric Funk (Original Mix).mp3',
+                'pirate_copy_-_101_problems_(extended_mix).mp3',
+                'pirate_copy_-_deep_in_my_garage_(extended_mix).mp3'
+            ]
+        };
+    
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
