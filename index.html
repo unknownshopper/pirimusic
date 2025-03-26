@@ -24,25 +24,47 @@
             width: 100%;
             margin: 20px 0;
         }
-        .playlist {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-            max-height: 400px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        
-        .playlist li {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f0f0f0;
+            }
+            
+            .player-container {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            audio {
+                width: 100%;
+                margin: 20px 0;
+            }
+            .playlist {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+                max-height: 400px;
+                overflow-y: auto;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                display: block !important; /* Forzar visualización */
+            }
+            
+            .playlist li {
+                padding: 15px;
+                margin: 5px 0;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s ease;
+                display: block !important; /* Forzar visualización */
+            }
+        </style>
         .playlist li:hover {
             background-color: #f0f0f0;
             padding-left: 20px;
@@ -224,6 +246,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing player...');
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('player-section').classList.add('hidden');
             if (localStorage.getItem('isLoggedIn')) {
@@ -243,55 +266,27 @@
             }); 
 
             const playlist = document.getElementById('playlist');
-            playlist.innerHTML = '';
-
-            const playlists = {
-                'deep': [
-                    'AYYBO - RIZZ (Extended Mix).mp3',
-                    'Basement Jaxx - Red Alert (Eric Morillo + Harry Romero Dub).mp3',
-                    'Chemical brothers -. Star Guitar.mp3',
-                    'Earth n Days - The Kinda Love (CASSIMM Extended Remix).mp3',
-                    'pirate_copy_-_take_me_to_the_disco_(original_mix).mp3',
-                    'pirate_copy_-_this_time_(original_mix).mp3',
-                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(extended_mix).mp3',
-                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(leon_(italy)_extended_mix).mp3',
-                    'pirate_copy-be_right_feat._liam_craig_(instrumental_mix).mp3',
-                    'pirate_copy-be_right_feat._liam_craig_(vocal_mix).mp3',
-                    'pirate_copy-big_(original_mix).mp3',
-                    'pirate_copy-jamdub_(original_mix).mp3',
-                    'pirate_copy-ric_funk-8a8c2c91.mp3'
-                ],
-                'funk': [
-                    'Supermen Lovers - Starlight (Dub Version).mp3',
-                    'Sussie 4 - Musica Moderna -  02 - On Time.mp3',
-                    'Sussie 4 - Musica Moderna -  03 - FLY.mp3',
-                    'Sussie 4 - Musica Moderna -  05 - ESCAPAR.mp3',
-                    'Sussie 4 - Musica Moderna -  06 - Conciencia Latina.mp3'
-                ],
-                'house': [
-                    'Pirate Copy - Party Time  (Original  Mix).mp3',
-                    'Pirate Copy - Ric Funk (Original Mix).mp3',
-                    'pirate_copy_-_101_problems_(extended_mix).mp3',
-                    'pirate_copy_-_deep_in_my_garage_(extended_mix).mp3',
-                    'pirate_copy_-_good_vibrations_(original_mix).mp3',
-                    'pirate_copy_-_i_cant_stop_(extended_mix).mp3',
-                    'pirate_copy_-_love_will_save_the_day_(extended_mix).mp3',
-                    'pirate_copy_-_take_me_to_the_disco_(original_mix).mp3',
-                    'pirate_copy_-_this_time_(original_mix).mp3',
-                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(extended_mix).mp3',
-                    'pirate_copy_and_nicolas_caprile-all_eyes_above_(leon_(italy)_extended_mix).mp3'
-                ]
-            };
-
+            if (!playlist) {
+                console.error('Playlist element not found!');
+                return;
+            }
+            
+            playlist.innerHTML = ''; // Clear current list
+            
             const songs = playlists[folderName] || [];
-            console.log('Songs in playlist:', songs);
+            if (songs.length === 0) {
+                playlist.innerHTML = '<li>No songs found in this folder</li>';
+                return;
+            }
+            
             songs.forEach((song, index) => {
                 const li = document.createElement('li');
                 li.textContent = `${index + 1}. ${song}`;
-                li.onclick = () => playAudio(`/audio/${folderName}/${song}`);
-                if (audioPlayer.src.includes(song)) {
-                    li.classList.add('active');
-                }
+                li.style.cursor = 'pointer';
+                li.onclick = () => {
+                    console.log('Attempting to play:', song);
+                    playAudio(`audio/${folderName}/${song}`);
+                };
                 playlist.appendChild(li);
             });
         }
