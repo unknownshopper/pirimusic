@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mp3 list</title>
+    <title>Mp3o</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,16 +29,6 @@
             <button onclick="switchFolder('house')" class="folder-btn">House</button>
         </div>
         <div class="playback-options">
-            <button onclick="toggleRepeat()" id="repeat-btn" class="option-btn">
-                <span>🔂</span> Repeat
-            </button>
-            <button onclick="toggleRepeatAll()" id="repeat-all-btn" class="option-btn">
-                <span>🔁</span> Repeat All
-            </button>
-            <button onclick="toggleRandom()" id="random-btn" class="option-btn">
-                <span>🔀</span> Shuffle
-            </button>
-            <!-- Add Sleep Timer -->
             <select id="sleepTimer" onchange="setSleepTimer(this.value)" class="option-btn">
                 <option value="">🌙 Sleep Timer</option>
                 <option value="20">20 minutes</option>
@@ -190,22 +180,12 @@
             };
             // Add ended event listener for playlist control
             audioPlayer.onended = function() {
-                if (isRepeatOne) return; // Already handled by loop property
-                
                 const folderName = audioPath.split('/')[1];
                 currentPlaylist = playlists[folderName];
                 currentIndex = currentPlaylist.indexOf(audioPath.split('/').pop());
                 
-                let nextIndex;
-                if (isRandom) {
-                    nextIndex = Math.floor(Math.random() * currentPlaylist.length);
-                } else {
-                    nextIndex = (currentIndex + 1) % currentPlaylist.length;
-                }
-                
-                if (nextIndex !== 0 || isRepeatAll) {
-                    playAudio(`audio/${folderName}/${currentPlaylist[nextIndex]}`);
-                }
+                const nextIndex = (currentIndex + 1) % currentPlaylist.length;
+                playAudio(`audio/${folderName}/${currentPlaylist[nextIndex]}`);
             };
         }
 
